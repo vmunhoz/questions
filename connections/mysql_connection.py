@@ -1,9 +1,9 @@
 import mysql.connector
-from configuration import config
+
 
 class MysqlConnection:
 
-    def __init__(self):
+    def __init__(self, config):
         self.db = mysql.connector.connect(
             host="localhost",
             user=config["DATABASE"]["USER"],
