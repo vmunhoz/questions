@@ -20,5 +20,29 @@ def ask():
     return render_template("ask.html")
 
 
+@app.route("/manage", methods=('GET', 'POST'))
+def manage():
+    if request.method == 'POST':
+        question_id = int(request.form.get("id"))
+        if "authorized" in request.form:
+            if request.form["authorized"] == '1':
+                mysql_connection.authorize_question(question_id)
+            else:
+                mysql_connection.unauthorize_question(question_id)
+        if "answered" in request.form:
+            if request.form["answered"] == '1':
+                mysql_connection.answer_question(question_id)
+            else:
+                mysql_connection.unanswer_question(question_id)
+    questions = mysql_connection.get_all_questions()
+    return render_template("manage.html", questions=questions)
+
+
+@app.route("/show", methods=('GET',))
+def show():
+    question = mysql_connection.get_next_question_to_answer()
+    return render_template("show.html", question=question)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

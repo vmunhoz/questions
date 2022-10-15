@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Gerenciar Perguntas{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<main class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Pergunta</th>
+            <th scope="col">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for question in questions %}
+        <tr class="{{'table-success' if question.answered else 'table-danger' if not question.authorized}}">
+            <th scope="row">{{question.id}}</th>
+            <td>{{question.author if question.author else "Anônimo"}}</td>
+            <td>{{question.question}}</td>
+            <td>
+                <div class="btn-group">
+                <form method="post">
+                    <input type="text" name="id" value="{{question.id}}" hidden>
+                    <input type="text" name="authorized" value="{{0 if question.authorized else 1}}" hidden>
+                    <button class="btn btn-sm {{'btn-danger' if question.authorized else 'btn-success'}}"
+                            style="margin-right: 10px"
+                            type="submit">{{"Remover Autorização" if question.authorized else "Autorizar"}}</button>
+                </form>
+                <form method="post">
+                    <input type="text" name="id" value="{{question.id}}" hidden>
+                    <input type="text" name="answered" value="{{0 if question.answered else 1}}" hidden>
+                    <button class="btn btn-sm {{'btn-danger' if question.answered else 'btn-success'}}"
+                            style="margin-right: 10px"
+                            type="submit">{{"Não foi respondida" if question.answered else "Foi respondida"}}</button>
+                </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}
