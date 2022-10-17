@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Perguntar{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<main class="container">
+    <p class="question">{{question.question}}</p>
+    <p class="author">Enviada por: {{question.author}}</p>
+</main>
+{% endblock %}
