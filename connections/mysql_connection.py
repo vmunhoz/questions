@@ -14,7 +14,7 @@ class MysqlConnection:
         print(self.db)
 
     def insert_question(self, question, author=None):
-        cursor = self.db.cursor()
+        cursor = self.db.cursor(buffered=True)
         sql = "INSERT INTO questions (question, author) VALUES (%s, %s)"
         val = (question, author)
         cursor.execute(sql, val)
@@ -30,7 +30,7 @@ class MysqlConnection:
         print(f"question {question_id} unauthorized")
 
     def set_authorize_question(self, question_id: int, authorize: int):
-        cursor = self.db.cursor()
+        cursor = self.db.cursor(buffered=True)
         sql = "UPDATE questions SET authorized = %s WHERE id = %s"
         val = (authorize, question_id)
         cursor.execute(sql, val)
@@ -45,20 +45,20 @@ class MysqlConnection:
         print(f"question {question_id} unanswered")
 
     def set_answered_question(self, question_id: int, answer: int):
-        cursor = self.db.cursor()
+        cursor = self.db.cursor(buffered=True)
         sql = "UPDATE questions SET answered = %s WHERE id = %s"
         val = (answer, question_id)
         cursor.execute(sql, val)
         self.db.commit()
 
     def get_next_question_to_answer(self):
-        cursor = self.db.cursor(dictionary=True)
+        cursor = self.db.cursor(buffered=True, dictionary=True)
         sql = "SELECT * FROM questions WHERE authorized=1 AND answered=0 ORDER BY date"
         cursor.execute(sql)
         return cursor.fetchone()
 
     def get_all_questions(self):
-        cursor = self.db.cursor(dictionary=True)
+        cursor = self.db.cursor(buffered=True, dictionary=True)
         sql = "SELECT * FROM questions ORDER BY date DESC"
         cursor.execute(sql)
         return cursor.fetchall()
