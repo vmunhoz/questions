@@ -11,9 +11,9 @@ class MysqlConnection:
             database=config["DATABASE"]["SCHEMA"]
         )
 
-        print(self.db)
-
     def insert_question(self, question, author=None):
+        if not self.db.is_connected():
+            self.db.reconnect()
         cursor = self.db.cursor(buffered=True)
         sql = "INSERT INTO questions (question, author) VALUES (%s, %s)"
         val = (question, author)
@@ -30,6 +30,8 @@ class MysqlConnection:
         print(f"question {question_id} unauthorized")
 
     def set_authorize_question(self, question_id: int, authorize: int):
+        if not self.db.is_connected():
+            self.db.reconnect()
         cursor = self.db.cursor(buffered=True)
         sql = "UPDATE questions SET authorized = %s WHERE id = %s"
         val = (authorize, question_id)
@@ -45,6 +47,8 @@ class MysqlConnection:
         print(f"question {question_id} unanswered")
 
     def set_answered_question(self, question_id: int, answer: int):
+        if not self.db.is_connected():
+            self.db.reconnect()
         cursor = self.db.cursor(buffered=True)
         sql = "UPDATE questions SET answered = %s WHERE id = %s"
         val = (answer, question_id)
@@ -52,12 +56,16 @@ class MysqlConnection:
         self.db.commit()
 
     def get_next_question_to_answer(self):
+        if not self.db.is_connected():
+            self.db.reconnect()
         cursor = self.db.cursor(buffered=True, dictionary=True)
         sql = "SELECT * FROM questions WHERE authorized=1 AND answered=0 ORDER BY date"
         cursor.execute(sql)
         return cursor.fetchone()
 
     def get_all_questions(self):
+        if not self.db.is_connected():
+            self.db.reconnect()
         cursor = self.db.cursor(buffered=True, dictionary=True)
         sql = "SELECT * FROM questions ORDER BY date DESC"
         cursor.execute(sql)
@@ -66,12 +74,3 @@ class MysqlConnection:
 
 if __name__ == "__main__":
     conn = MysqlConnection()
-    # conn.insert_question("teste numero 3")
-    # conn.insert_question("teste numero 4", "Vinicius")
-    # conn.unauthorize_question(3)
-    # conn.authorize_question(4)
-    # conn.answer_question(3)
-    # conn.unanswer_question(3)
-    # print(conn.get_next_question_to_answer())
-    # for q in conn.get_all_questions():
-    #     print(q)
