@@ -14,6 +14,8 @@ def ask():
     if request.method == 'POST':
         author = request.form.get("author")
         question = request.form.get("question")
+        if "http://" in question or "https://" in question:
+            return "", 404
         mysql_connection.insert_question(question, author)
         flash('Pergunta realizada com sucesso!')
 
