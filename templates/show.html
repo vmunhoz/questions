@@ -9,7 +9,7 @@
 {% if question %}
 <main class="container">
     <p class="question">{{question.question}}</p>
-    <p class="author">Enviada por: {{question.author}}</p>
+    <p class="author">Enviada por: {{question.author if question.author else "Anônimo"}}</p>
 </main>
 {% endif %}
 
