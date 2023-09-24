@@ -37,6 +37,12 @@
                             style="margin-right: 10px"
                             type="submit">{{"Não foi respondida" if question.answered else "Foi respondida"}}</button>
                 </form>
+                <form method="post" action="delete">
+                <input type="text" name="id" value="{{question.id}}" hidden>
+                <button class="btn btn-sm btn-danger"
+                        style="margin-right: 10px"
+                        type="submit">X</button>
+                </form>
                 </div>
             </td>
         </tr>

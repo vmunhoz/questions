@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request
+from flask import Flask, flash, render_template, request, redirect
 
 from configuration import config
 from connections.mysql_connection import MysqlConnection
@@ -42,6 +42,14 @@ def manage():
 def show():
     question = mysql_connection.get_next_question_to_answer()
     return render_template("show.html", question=question)
+
+
+@app.route("/delete", methods=(['POST']))
+def delete():
+    question_id = int(request.form.get("id"))
+    mysql_connection.delete_question(question_id)
+
+    return redirect("manage")
 
 
 if __name__ == "__main__":

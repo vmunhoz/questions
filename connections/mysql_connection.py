@@ -21,6 +21,16 @@ class MysqlConnection:
         self.db.commit()
         print("new question asked")
 
+    def delete_question(self, question_id):
+        if not self.db.is_connected():
+            self.db.reconnect()
+        cursor = self.db.cursor(buffered=True)
+        sql = "DELETE FROM questions WHERE id = %s"
+        val = (question_id,)
+        cursor.execute(sql, val)
+        self.db.commit()
+        print(f"Question with ID {question_id} has been deleted")
+
     def authorize_question(self, question_id: int):
         self.set_authorize_question(question_id, 1)
         print(f"question {question_id} authorized")
